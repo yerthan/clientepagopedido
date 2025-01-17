@@ -11,6 +11,11 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.sql.Date;
+import java.time.LocalDate;
+import java.time.Year;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 @SpringBootTest
@@ -50,6 +55,8 @@ class ClientepagopedidoApplicationTests {
     void test1() {
         List<Pedido> list = pedidoRepository.findAll();
 
+
+
     }
 
 
@@ -60,6 +67,7 @@ class ClientepagopedidoApplicationTests {
     @Test
     void test2() {
         List<Cliente> list = clienteRepository.findAll();
+
 
     }
 
@@ -86,6 +94,15 @@ class ClientepagopedidoApplicationTests {
     @Test
     void test4() {
         List<Pedido> list = pedidoRepository.findAll();
+/*
+        list.stream().filter(c ->
+        {
+            LocalDate fechaEsperad = c.getFechaEsperada();
+            LocalDate fechaEntregado = c.getFechaEntrega();
+
+
+
+        })*/
 
     }
 
@@ -96,6 +113,16 @@ class ClientepagopedidoApplicationTests {
     @Test
     void test5() {
         List<Pago> list = pagoRepository.findAll();
+        var lista = list.stream()
+                .sorted()
+                .filter(p -> {
+                    LocalDate fecha = LocalDate.of(2008, 1, 1);
+                    Boolean p2 = p.getFechaPago().isAfter(fecha);
+                    return p2;
+                })
+                .toList();
+
+        lista.stream().forEach(System.out::println);
 
     }
 
@@ -105,9 +132,9 @@ class ClientepagopedidoApplicationTests {
     @Test
     void test6() {
         List<Cliente> list = clienteRepository.findAll();
+        //list.stream()
 
     }
-
 
     /**
      * 7. ¿Cuántos clientes existen con domicilio en la ciudad de Madrid?
@@ -115,6 +142,12 @@ class ClientepagopedidoApplicationTests {
     @Test
     void test7() {
         List<Cliente> list = clienteRepository.findAll();
+
+        var contador = list.stream()
+                .filter(p -> p.getCiudad().equals("Madrid"))
+                .count();
+
+        System.out.println(contador);
 
     }
 
@@ -125,13 +158,48 @@ class ClientepagopedidoApplicationTests {
     void test8() {
         List<Cliente> list = clienteRepository.findAll();
 
+        var nombre = list.stream().
+                sorted(Comparator.comparing(f -> f.getLimiteCredito()))
+                .findFirst().stream().toList();
+
+
+
     }
 
     /**
      *  9. Devuelve un listado con el número de clientes que tiene cada país.
      */
+    @Test
     void test9() {
         List<Cliente> list = clienteRepository.findAll();
+
+        var lista = list.stream().
+                filter(p ->{
+                    int contadorEspaña = 0;
+                    int contadorFrancia = 0;
+                    int contadorUSA = 0;
+                    int contadorAus = 0;
+                    int contadorUnitedKingdom = 0;
+                    ArrayList<String>  arrayString = new ArrayList<>();
+                    if(p.getPais().equals("Spain")){
+                        contadorEspaña++;
+                    }else if(p.getPais().equals("France")){
+                        contadorFrancia++;
+                    }else if(p.getPais().equals("USA")){
+                        contadorUSA++;
+                    }else if(p.getPais().equals("Australia")){
+                        contadorAus++;
+                    }else if(p.getPais().equals("United Kingdom")){
+                        contadorUnitedKingdom++;
+                    }
+
+                    String cadena =  "Contador España" + contadorEspaña + "Contador Francia " + contadorFrancia + "Contador Usa"+ contadorUSA + "contador Australia "+ contadorAus + " contador REINO UNIDO" + contadorUnitedKingdom;
+                    arrayString.add(cadena);
+                    return true;
+                }).toList();
+
+        System.out.println(lista);
+
 
     }
 
@@ -141,6 +209,7 @@ class ClientepagopedidoApplicationTests {
      */
     void test10() {
         List<Cliente> list = clienteRepository.findAll();
+        //list.stream().forEach(p -> System.out.println(p.getNombreCliente() + p.getApellidoContacto());
 
     }
 
